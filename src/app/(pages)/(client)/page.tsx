@@ -29,7 +29,7 @@ const Page = () => {
   }
 
   return (
-    <div className='max-w-7xl mx-auto p-4 flex  items-center h-screen '>
+    <div className='max-w-7xl mx-auto p-4 '>
       <div className='w-full'>
         <div className="flex justify-between items-center  mb-4">
           <div className='flex items-center bg-white p-2 rounded-lg'>
