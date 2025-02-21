@@ -1,0 +1,36 @@
+include:
+  - project: $CI_TEMPLATE_PATH
+    file: 'nextjs.yml'
+
+##### For Development #####
+develop:build:
+  extends: .build
+  only:
+    - develop
+  variables:
+    DOCKER_FILE: "Dockerfile"
+    IMAGE_NAME: "bigplay-taro/web-ppc"
+    BUILD_ENV: "development"
+    IMAGE_TAG_PREFIX: 'dev-'
+
+develop:deploy:
+  extends: .deploy
+  only:
+    - develop
+  variables:
+    DEPLOY_ppc : "web-ppc"
+    DEPLOY_ENV: "dev"
+
+
+##### For Production #####
+production:build:
+  extends: .build
+  only:
+    - main
+  variables:
+    DOCKER_FILE: "Dockerfile"
+    IMAGE_NAME: "bigplay-taro/web-ppc"
+    BUILD_ENV: "development"
+    IMAGE_TAG_PREFIX: 'prod-'
+
+
