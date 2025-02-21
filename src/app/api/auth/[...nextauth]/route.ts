@@ -5,7 +5,7 @@ import { JWT } from 'next-auth/jwt';
 import { Session } from 'next-auth';
 
 const options: NextAuthOptions = {
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || "qR7KGtmMdYBY+kxh8OhgU8jHlb4a/iB2mZwZoL0He5k=",
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
