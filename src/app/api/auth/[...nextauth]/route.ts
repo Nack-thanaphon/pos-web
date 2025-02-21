@@ -5,18 +5,13 @@ import { JWT } from 'next-auth/jwt';
 import { Session } from 'next-auth';
 
 const options: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
-    // Add more providers here
   ],
-  // Optional: Add custom pages
-  pages: {
-    signIn: '/auth/signin',
-  },
-  // Optional: Add callbacks
   callbacks: {
     async session({ session, token }: { session: Session, token: JWT }) {
       session.user.id = token.id;
