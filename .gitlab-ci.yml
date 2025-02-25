@@ -12,7 +12,6 @@ develop:build:
     IMAGE_NAME: "bigplay-taro/web-ppc"
     BUILD_ENV: "development"
     IMAGE_TAG_PREFIX: 'dev-'
-
 develop:deploy:
   extends: .deploy
   only:
@@ -20,8 +19,6 @@ develop:deploy:
   variables:
     DEPLOY_ppc : "web-ppc"
     DEPLOY_ENV: "dev"
-
-
 ##### For Production #####
 production:build:
   extends: .build

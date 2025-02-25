@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   output: 'standalone',
   trailingSlash: true,
   images: {
-    domains: ['www.jmthaifood.com'],
+    domains: ['www.jmthaifood.com', 'lh3.googleusercontent.com'],
   },
 };
 

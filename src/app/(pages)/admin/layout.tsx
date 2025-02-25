@@ -1,7 +1,10 @@
 "use client";
 
-import "@/app/app.css";
-import ReactQueryProvider from "@/app/shared/react-query/provider";
+import { SessionProvider } from 'next-auth/react';
+import { HeroUIProvider } from '@heroui/react';
+import AuthProvider from "@/provider/AuthProvider";
+import Loading from "@/shared/components/Loading";
+import "@/app/index.css";
 
 export default function RootLayout({
   children
@@ -9,15 +12,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ReactQueryProvider>
+    <SessionProvider>
       <html lang="en">
         <head>
           <link rel="shortcut icon" href="/image/logo.jpg" />
         </head>
         <body>
-          {children}
+          <HeroUIProvider>
+            <Loading />
+            <AuthProvider>{children}</AuthProvider>
+          </HeroUIProvider>
         </body>
       </html>
-    </ReactQueryProvider>
+    </SessionProvider>
   );
 }

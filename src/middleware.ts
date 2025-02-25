@@ -1,22 +1,28 @@
-// filepath: /Users/dev_nack/Desktop/ppc-web/src/middleware.ts
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import UAParser from 'ua-parser-js';
+import { NextRequest, NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-export function middleware(request: NextRequest) {
-  const ua = request.headers.get('user-agent') || '';
-  const parser = new UAParser(ua);
-  const deviceType = parser.getDevice().type;
+export async function middleware(req: NextRequest) {
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  const { pathname } = req.nextUrl;
 
-  // if (deviceType === 'mobile') {
-  //   console.log('Redirecting to mobile');
-  //   return NextResponse.rewrite(new URL('/(front)/(mobile)', request.url));
-  // } else {
-  //   console.log('Redirecting to client');
-  return NextResponse.rewrite(new URL('/', request.url));
-  // }
+  if (!token) {
+    if (pathname.startsWith("/admin") || pathname === "/") {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+    return NextResponse.next();
+  }
+
+  if (token.role === "Admin" && pathname === "/") {
+    return NextResponse.redirect(new URL("/admin", req.url));
+  }
+
+  if (token.role === "User" && pathname.startsWith("/admin")) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/'],
+  matcher: ["/admin/:path*", "/"],
 };
