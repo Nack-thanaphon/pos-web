@@ -7,7 +7,7 @@ import ComingSoon from '@/shared/components/ComingSoon';
 const Page = () => {
   
   return (
-    <div className='max-w-7xl mx-auto p-4 gap-3 flex'>
+    <div className='max-w-7xl mx-auto p-4 gap-3 lg:flex'>
       <Navbar />
       <div className='h-screen bg-white rounded-[10px] p-3 flex-1'>
         <ComingSoon />

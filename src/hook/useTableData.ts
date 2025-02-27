@@ -1,20 +1,42 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { api } from "@/utils/api";
 
-export const useTableData = (endpoint: string) => {
-  const [data, setData] = useState<any[]>([]);
+interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+}
+
+interface TableData<T> {
+  data: T[];
+  loading: boolean;
+  error: string | null;
+  filter: string;
+  pagination: Pagination;
+  setFilter: (filter: string) => void;
+  setPagination: (pagination: Partial<Pagination>) => void;
+  addData: (newItem: T) => Promise<void>;
+  updateData: (id: number, updatedItem: T) => Promise<void>;
+  deleteData: (id: number) => Promise<void>;
+  getOneData: (id: number) => Promise<T>;  // Add this line
+}
+
+export const useTableData = <T>(endpoint: string): TableData<T> => {
+  const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState("");
-  const [pagination, setPagination] = useState({ page: 1, limit: 5, total: 0 });
+  const [pagination, setPagination] = useState<Pagination>({
+    page: 1,
+    limit: 5,
+    total: 0
+  });
 
-  useEffect(() => {
-    fetchData();
-  }, [filter, pagination.page, pagination.limit]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
-      const response = await api.get(endpoint, {
+      const response = await api.get(`/${endpoint}/getAll`, {
         params: {
           page: pagination.page,
           limit: pagination.limit,
@@ -24,25 +46,79 @@ export const useTableData = (endpoint: string) => {
       setData(response.data.data);
       setPagination(prev => ({ ...prev, total: response.data.total }));
     } catch (error) {
-      console.error("Error fetching data", error);
+      const message = error instanceof Error ? error.message : 'An error occurred';
+      setError(message);
+      console.error("Error fetching data:", message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-  };
+  }, [endpoint, filter, pagination.page, pagination.limit]);
 
-  const addData = async (newItem: any) => {
-    await api.post(endpoint, newItem);
+  useEffect(() => {
     fetchData();
+  }, [fetchData]);
+
+  const addData = async (newItem: T): Promise<void> => {
+    setLoading(true);
+    try {
+      await api.post(`/${endpoint}/create`, newItem);
+      await fetchData();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'An error occurred';
+      setError(message);
+      throw error;
+    }
+  };  
+
+  const updateData = async (id: number, updatedItem: T): Promise<void> => {
+    setLoading(true);
+    try {
+      await api.patch(`${endpoint}/update/${id}`, updatedItem);
+      await fetchData();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'An error occurred';
+      setError(message);
+      throw error;
+    }
   };
 
-  const updateData = async (id: number, updatedItem: any) => {
-    await api.put(`${endpoint}/${id}`, updatedItem);
-    fetchData();
+  const deleteData = async (id: number): Promise<void> => {
+    setLoading(true);
+    try {
+      await api.delete(`${endpoint}/delete/${id}`);
+      await fetchData();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'An error occurred';
+      setError(message);
+      throw error;
+    }
+  };
+  const getOneData = async (id: number): Promise<T> => {
+    setLoading(true);
+    try {
+      const response = await api.get(`${endpoint}/getOne/${id}`);
+      return response.data;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'An error occurred';
+      setError(message);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const deleteData = async (id: number) => {
-    await api.delete(`${endpoint}/${id}`);
-    fetchData();
+  return {
+    data,
+    loading,
+    error,
+    filter,
+    pagination,
+    setFilter,
+    setPagination: (newPagination: Partial<Pagination>) =>
+      setPagination(prev => ({ ...prev, ...newPagination })),
+    addData,
+    updateData,
+    getOneData,
+    deleteData
   };
-
-  return { data, loading, addData, updateData, deleteData, setFilter, pagination, setPagination };
 };

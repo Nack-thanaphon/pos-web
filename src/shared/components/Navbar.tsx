@@ -46,7 +46,7 @@ const Navbar = () => {
     ];
 
     return (
-        <div className={`h-full bg-blue-800 h-100 rounded-[10px] p-3 transition-transform duration-300 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:w-1/4`}>
+        <div className={`h-full bg-blue-800 h-100 hidden lg:block rounded-[10px] p-3 transition-transform duration-300 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:w-1/4`}>
             <div className="flex flex-col items-center justify-center py-3">
                 <div className="w-[80px] h-[80px] rounded-[50%] overflow-hidden flex items-center">
                     {

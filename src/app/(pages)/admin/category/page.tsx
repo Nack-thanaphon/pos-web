@@ -6,7 +6,7 @@ import LogsTable from '../logs/logs.table';
 const Page = () => {
 
   return (
-    <div className='max-w-7xl mx-auto p-4 gap-3 flex'>
+    <div className='max-w-7xl mx-auto p-4 gap-3 lg:flex'>
       <Navbar />
       <div className='h-full bg-white rounded-[10px] p-3 flex-1'>
         <div className="my-3">

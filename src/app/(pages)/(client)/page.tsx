@@ -8,7 +8,7 @@ import Image from 'next/image';
 import LogoutButton from '@/shared/components/Logout';
 
 
-const page = () => {
+const Page = () => {
   const { data: session, status } = useSession();
   const [isCartVisible, setIsCartVisible] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -40,7 +40,7 @@ const page = () => {
         <div className="flex justify-between mb-4">
           <div className='flex items-center bg-white p-2 rounded-lg'>
             {session?.user?.image && (
-              <img src={session?.user.image} alt={session?.user.name || 'User'} className='w-10 h-10 rounded-full mr-2' />
+              <Image src={session?.user.image} alt={session?.user.name || 'User'}  width={550} height={550} className='w-10 h-10 rounded-full mr-2' />
             )}
             <span className='mr-4'>{session?.user?.name}</span>
           </div>
@@ -66,4 +66,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

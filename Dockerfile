@@ -25,6 +25,7 @@ WORKDIR /app
 
 # Copy build artifacts from the builder stage
 COPY --from=builder /app ./
+COPY --from=builder /app/.next ./.next
 
 # Install only production dependencies
 RUN npm ci --only=production

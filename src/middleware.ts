@@ -12,11 +12,11 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  if (token.role === "Admin" && pathname === "/") {
+  if (token.role === "admin" && pathname === "/") {
     return NextResponse.redirect(new URL("/admin", req.url));
   }
 
-  if (token.role === "User" && pathname.startsWith("/admin")) {
+  if (token.role === "user" && pathname.startsWith("/admin")) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 

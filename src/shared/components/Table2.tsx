@@ -18,11 +18,12 @@ interface TableProps {
     limit: number;
     total: number;
   };
+  onPreview: (id: number) => void;
   onPageChange: (newPage: number) => void;
   onLimitChange: (newLimit: number) => void;
 }
 
-const Table2: React.FC<TableProps> = ({ columns, header, data, onEdit, onDelete, pagination, onPageChange, onLimitChange }) => {
+const Table2: React.FC<TableProps> = ({ columns, header, data, onEdit, onDelete, onPreview, pagination, onPageChange, onLimitChange }) => {
   const [sortField, setSortField] = useState('');
   const [sortDirection, setSortDirection] = useState('asc');
   const [searchTerm, setSearchTerm] = useState('');
@@ -110,9 +111,14 @@ const Table2: React.FC<TableProps> = ({ columns, header, data, onEdit, onDelete,
                 {columns?.map((col, colIndex) => (
                   <td key={colIndex} className="px-6 py-4 whitespace-nowrap">{row[col]}</td>
                 ))}
+
                 <td className="px-6 py-4 flex space-x-2">
                   <div className="flex items-center justify-end space-x-2">
-                    <button className="p-1 text-blue-600 hover:text-blue-800 rounded-full hover:bg-blue-50">
+
+                    <button
+                      onClick={() => onPreview(row.id)}
+                      className="p-1 text-blue-600 hover:text-blue-800 rounded-full hover:bg-blue-50"
+                    >
                       <Eye className="h-4 w-4" />
                     </button>
                     <button onClick={() => onEdit(row)} className="p-1 text-green-600 hover:text-green-800 rounded-full hover:bg-green-50">
@@ -147,7 +153,7 @@ const Table2: React.FC<TableProps> = ({ columns, header, data, onEdit, onDelete,
             Previous
           </button>
           <span>{pagination.page}</span>
-          <button onClick={() => onPageChange(pagination.page + 1)} disabled={pagination.page * pagination.limit >= pagination.total}  className="px-3 py-1 bg-gray-300 rounded disabled:opacity-50">
+          <button onClick={() => onPageChange(pagination.page + 1)} disabled={pagination.page * pagination.limit >= pagination.total} className="px-3 py-1 bg-gray-300 rounded disabled:opacity-50">
             Next
           </button>
         </div>

@@ -26,13 +26,21 @@ const OrdersTable = () => {
     }
     setIsModalOpen(false);
   };
-
+  
   const handlePageChange = (newPage: number) => {
-    setPagination(prev => ({ ...prev, page: newPage }));
+    setPagination({
+      page: newPage,
+      limit: pagination.limit,
+      total: pagination.total
+    });
   };
 
   const handleLimitChange = (newLimit: number) => {
-    setPagination(prev => ({ ...prev, limit: newLimit, page: 1 }));
+    setPagination({
+      page: 1,
+      limit: newLimit,
+      total: pagination.total
+    });
   };
 
   return (
@@ -49,7 +57,7 @@ const OrdersTable = () => {
 
       <Table
         columns={["event_type", "event_detail"]}
-        header={[ "ประเภทกิจกรรม", "รายละเอียดกิจกรรม", "สถานะ"]}
+        header={["ประเภทกิจกรรม", "รายละเอียดกิจกรรม", "สถานะ"]}
         data={data}
         onEdit={handleEdit}
         onDelete={handleDelete}
